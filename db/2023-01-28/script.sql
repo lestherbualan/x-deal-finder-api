@@ -57,6 +57,7 @@ CREATE TABLE [dbo].[Offers](
 	[StoreId] [bigint] NOT NULL,
 	[OfferTypeId] [bigint] NOT NULL,
 	[EntityStatusId] [bigint] NOT NULL,
+	[ThumbnailFileId] [bigint] NULL,
  CONSTRAINT [PK_e6f904e9e6517d0ff43132ffe1d] PRIMARY KEY CLUSTERED 
 (
 	[OfferId] ASC
@@ -287,6 +288,9 @@ ALTER TABLE [dbo].[Users]  WITH CHECK ADD  CONSTRAINT [FK_Users_Files] FOREIGN K
 REFERENCES [dbo].[Files] ([FileId])
 GO
 ALTER TABLE [dbo].[Users] CHECK CONSTRAINT [FK_Users_Files]
+GO
+ALTER TABLE [dbo].[Offers]  WITH CHECK ADD  CONSTRAINT [FK_Offers_Files] FOREIGN KEY([ThumbnailFileId])
+REFERENCES [dbo].[Files] ([FileId])
 GO
 ALTER TABLE [dbo].[Offers]  WITH CHECK ADD  CONSTRAINT [FK_Offers_Files] FOREIGN KEY([ThumbnailFileId])
 REFERENCES [dbo].[Files] ([FileId])
