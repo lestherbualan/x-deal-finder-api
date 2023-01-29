@@ -15,6 +15,9 @@ import { Stores } from "src/shared/entities/Stores";
 import { Users } from "src/shared/entities/Users";
 import { Repository } from "typeorm";
 import { v4 as uuid } from "uuid";
+import { FirebaseApp, initializeApp } from 'firebase/app';
+import { FirebaseStorage, getDownloadURL, getStorage, ref, uploadBytes } from 'firebase/storage';
+import { firebaseConfig } from "../core/provider/firebase/firestore-config";
 
 @Injectable()
 export class StoreService {
@@ -252,22 +255,18 @@ export class StoreService {
             createStoreDto.thumbnail.fileName
           )}`;
           file.originalFileName = createStoreDto.thumbnail.fileName;
-          const bucketFile = bucket.file(
-            `store/profile/${newFileName}${extname(file.fileName)}`
-          );
-          console.log(bucketFile)
-          console.log("bucket below")
-          console.log(bucket)
+          const app = initializeApp(firebaseConfig);
+          const storeApp = getStorage(app);
           const img = Buffer.from(createStoreDto.thumbnail.data, "base64");
-          await bucketFile.save(img).then(async () => {
-            const url = await bucketFile.getSignedUrl({
-              action: "read",
-              expires: "03-09-2500",
-            });
-            file.url = url[0];
+            
+          const imageRef = ref(storeApp, `store/profile/${newFileName}${extname(file.fileName)}`);
+
+          uploadBytes(imageRef, img).then(async()=>{
+            file.url = await getDownloadURL(imageRef);
             store.thumbnailFile = await entityManager.save(Files, file);
-          }).catch((err)=>{
-            throw err;
+          }).catch((error)=>{
+            console.log(error.message);
+            throw error;
           });
         }
         store = await entityManager.save(store);
