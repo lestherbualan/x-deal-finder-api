@@ -21,6 +21,9 @@ import { extname } from "path";
 import { FirebaseProvider } from "src/core/provider/firebase/firebase-provider";
 import { Files } from "src/shared/entities/Files";
 import { v4 as uuid } from "uuid";
+import { firebaseConfig } from "src/core/provider/firebase/firestore-config";
+import { initializeApp } from "firebase/app";
+import { getDownloadURL, getStorage, ref, uploadBytes } from "firebase/storage";
 
 @Injectable()
 export class UsersService {
@@ -208,51 +211,93 @@ export class UsersService {
         const newFileName: string = uuid();
         const bucket = this.firebaseProvoder.app.storage().bucket();
         if (user.profilePictureFile) {
-          try {
-            const deleteFile = bucket.file(
-              `profile/${user.profilePictureFile.fileName}`
-            );
-            deleteFile.delete();
-          } catch (ex) {
-            console.log(ex);
-          }
-          const file = user.profilePictureFile;
-          file.fileName = `${newFileName}${extname(
-            userDto.profilePictureFile.fileName
-          )}`;
-          file.originalFileName = userDto.profilePictureFile.fileName;
-
-          const bucketFile = bucket.file(
-            `profile/${newFileName}${extname(file.fileName)}`
-          );
-          const img = Buffer.from(userDto.profilePictureFile.data, "base64");
-          await bucketFile.save(img).then(async () => {
-            const url = await bucketFile.getSignedUrl({
-              action: "read",
-              expires: "03-09-2500",
+            const newFileName: string = uuid();
+            //const bucket = this.firebaseProvoder.app.storage().bucket();
+  
+            const file = new Files();
+            file.fileName = `${newFileName}${extname(
+              userDto.profilePictureFile.fileName
+            )}`;
+            file.originalFileName = userDto.profilePictureFile.fileName;
+            const app = initializeApp(firebaseConfig);
+            const storeApp = getStorage(app);
+            const img = Buffer.from(userDto.profilePictureFile.data, "base64");
+              
+            const imageRef = ref(storeApp, `profile/${newFileName}${extname(file.fileName)}`);
+  
+            await uploadBytes(imageRef, img).then(async()=>{
+              file.url = await getDownloadURL(imageRef);
+              user.profilePictureFile = await entityManager.save(Files, file);
+            }).catch((error)=>{
+              console.log(error.message);
+              throw error;
             });
-            file.url = url[0];
-            user.profilePictureFile = await entityManager.save(Files, file);
-          });
+          // try {
+          //   const deleteFile = bucket.file(
+          //     `profile/${user.profilePictureFile.fileName}`
+          //   );
+          //   deleteFile.delete();
+          // } catch (ex) {
+          //   console.log(ex);
+          // }
+          // const file = user.profilePictureFile;
+          // file.fileName = `${newFileName}${extname(
+          //   userDto.profilePictureFile.fileName
+          // )}`;
+          // file.originalFileName = userDto.profilePictureFile.fileName;
+
+          // const bucketFile = bucket.file(
+          //   `profile/${newFileName}${extname(file.fileName)}`
+          // );
+          // const img = Buffer.from(userDto.profilePictureFile.data, "base64");
+          // await bucketFile.save(img).then(async () => {
+          //   const url = await bucketFile.getSignedUrl({
+          //     action: "read",
+          //     expires: "03-09-2500",
+          //   });
+          //   file.url = url[0];
+          //   user.profilePictureFile = await entityManager.save(Files, file);
+          // });
         } else {
+          const newFileName: string = uuid();
+          //const bucket = this.firebaseProvoder.app.storage().bucket();
+
           const file = new Files();
           file.fileName = `${newFileName}${extname(
             userDto.profilePictureFile.fileName
           )}`;
-          file.originalFileName = userDto.profilePictureFile.originalFileName;
-
-          const bucketFile = bucket.file(
-            `profile/${newFileName}${extname(file.fileName)}`
-          );
+          file.originalFileName = userDto.profilePictureFile.fileName;
+          const app = initializeApp(firebaseConfig);
+          const storeApp = getStorage(app);
           const img = Buffer.from(userDto.profilePictureFile.data, "base64");
-          await bucketFile.save(img).then(async () => {
-            const url = await bucketFile.getSignedUrl({
-              action: "read",
-              expires: "03-09-2500",
-            });
-            file.url = url[0];
+            
+          const imageRef = ref(storeApp, `profile/${newFileName}${extname(file.fileName)}`);
+
+          await uploadBytes(imageRef, img).then(async()=>{
+            file.url = await getDownloadURL(imageRef);
             user.profilePictureFile = await entityManager.save(Files, file);
+          }).catch((error)=>{
+            console.log(error.message);
+            throw error;
           });
+          // const file = new Files();
+          // file.fileName = `${newFileName}${extname(
+          //   userDto.profilePictureFile.fileName
+          // )}`;
+          // file.originalFileName = userDto.profilePictureFile.originalFileName;
+
+          // const bucketFile = bucket.file(
+          //   `profile/${newFileName}${extname(file.fileName)}`
+          // );
+          // const img = Buffer.from(userDto.profilePictureFile.data, "base64");
+          // await bucketFile.save(img).then(async () => {
+          //   const url = await bucketFile.getSignedUrl({
+          //     action: "read",
+          //     expires: "03-09-2500",
+          //   });
+          //   file.url = url[0];
+          //   user.profilePictureFile = await entityManager.save(Files, file);
+          // });
         }
       }
 
