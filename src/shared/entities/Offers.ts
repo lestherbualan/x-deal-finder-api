@@ -20,6 +20,12 @@ export class Offers {
   @Column("nvarchar", { name: "Name", length: 250 })
   name: string;
 
+  @Column("nvarchar", { name: "DealOffer", length: 250 })
+  dealOffer: string;
+
+  @Column("nvarchar", { name: "Location", length: 250 })
+  location: string;
+
   @Column("nvarchar", { name: "Description", length: 255 })
   description: string;
 

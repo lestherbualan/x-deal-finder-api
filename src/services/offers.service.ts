@@ -245,6 +245,8 @@ export class OffersService {
           offer.name = createOfferDto.name;
           offer.description = createOfferDto.description;
           offer.due = createOfferDto.due;
+          offer.dealOffer = createOfferDto.dealOffer;
+          offer.location = createOfferDto.location;
           offer.offerType = await entityManager.findOneBy(OfferTypes, {
             offerTypeId: createOfferDto.offerTypeId,
           });
@@ -335,6 +337,8 @@ export class OffersService {
           }
           offer.offerType = offerType;
           offer.due = dto.due;
+          offer.dealOffer = dto.dealOffer;
+          offer.location = dto.location;
 
           if (dto.thumbnail) {
             const newFileName: string = uuid();

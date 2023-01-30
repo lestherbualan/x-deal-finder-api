@@ -12,6 +12,14 @@ export class OfferDto {
 
   @ApiProperty()
   @IsNotEmpty()
+  dealOffer: string;
+
+  @ApiProperty()
+  @IsNotEmpty()
+  location: string;
+
+  @ApiProperty()
+  @IsNotEmpty()
   description: string;
 
   @ApiProperty()
