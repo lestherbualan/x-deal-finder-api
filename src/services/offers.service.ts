@@ -8,7 +8,7 @@ import { CreateOfferDto } from "src/core/dto/offer/offer.create.dto";
 import { OfferDto } from "src/core/dto/offer/offer.update.dtos";
 import { StoreDto } from "src/core/dto/store/store.update.dtos";
 import { FirebaseProvider } from "src/core/provider/firebase/firebase-provider";
-import firebaseConfig from "src/core/provider/firebase/firebase.config";
+import { firebaseConfig } from "src/core/provider/firebase/firestore-config";
 import { Files } from "src/shared/entities/Files";
 import { Offers } from "src/shared/entities/Offers";
 import { OfferTypes } from "src/shared/entities/OfferTypes";
@@ -264,8 +264,9 @@ export class OffersService {
             const img = Buffer.from(createOfferDto.thumbnail.data, "base64");
               
             try{
-              const imageRef = ref(storeApp, `store/profile/${newFileName}${extname(file.fileName)}`);
+              const imageRef = ref(storeApp, `offer/profile/${newFileName}${extname(file.fileName)}`);
               await uploadBytes(imageRef, img).then(async()=>{
+                console.log('hererer')
                 file.url = await getDownloadURL(imageRef);
                 offer.thumbnailFile = await entityManager.save(Files, file);
                 console.log(file.url)
@@ -300,7 +301,7 @@ export class OffersService {
             //   offer.thumbnailFile = await entityManager.save(Files, file);
             // });
           }
-          return await entityManager.save(offer);
+          return await entityManager.save(Offers,offer);
         }
       );
     } catch (e) {
@@ -339,51 +340,101 @@ export class OffersService {
             const newFileName: string = uuid();
             const bucket = this.firebaseProvoder.app.storage().bucket();
             if (offer.thumbnailFile) {
-              try {
-                const deleteFile = bucket.file(
-                  `offer/profile/${offer.thumbnailFile.fileName}`
-                );
-                deleteFile.delete();
-              } catch (ex) {
-                console.log(ex);
-              }
-              const file = offer.thumbnailFile;
-              file.fileName = `${newFileName}${extname(
-                dto.thumbnail.fileName
-              )}`;
-              file.originalFileName = dto.thumbnail.fileName;
+              const newFileName: string = uuid();
 
-              const bucketFile = bucket.file(
-                `offer/profile/${newFileName}${extname(file.fileName)}`
-              );
-              const img = Buffer.from(dto.thumbnail.data, "base64");
-              await bucketFile.save(img).then(async () => {
-                const url = await bucketFile.getSignedUrl({
-                  action: "read",
-                  expires: "03-09-2500",
-                });
-                file.url = url[0];
-                offer.thumbnailFile = await entityManager.save(Files, file);
-              });
-            } else {
               const file = new Files();
               file.fileName = `${newFileName}${extname(
                 dto.thumbnail.fileName
               )}`;
-              file.originalFileName = dto.thumbnail.originalFileName;
-
-              const bucketFile = bucket.file(
-                `offer/profile/${newFileName}${extname(file.fileName)}`
-              );
+              file.originalFileName = dto.thumbnail.fileName;
+              const app = initializeApp(firebaseConfig);
+              const storeApp = getStorage(app);
               const img = Buffer.from(dto.thumbnail.data, "base64");
-              await bucketFile.save(img).then(async () => {
-                const url = await bucketFile.getSignedUrl({
-                  action: "read",
-                  expires: "03-09-2500",
+                
+              try{
+                const imageRef = ref(storeApp, `offer/profile/${newFileName}${extname(file.fileName)}`);
+                await uploadBytes(imageRef, img).then(async()=>{
+                  console.log('hererer')
+                  file.url = await getDownloadURL(imageRef);
+                  offer.thumbnailFile = await entityManager.save(Files, file);
+                  console.log(file.url)
+                }).catch((error)=>{
+                  console.log(error.message);
+                  throw error;
                 });
-                file.url = url[0];
-                offer.thumbnailFile = await entityManager.save(Files, file);
-              });
+              }catch(e){
+                console.log(e)
+              }
+              // try {
+              //   const deleteFile = bucket.file(
+              //     `offer/profile/${offer.thumbnailFile.fileName}`
+              //   );
+              //   deleteFile.delete();
+              // } catch (ex) {
+              //   console.log(ex);
+              // }
+              // const file = offer.thumbnailFile;
+              // file.fileName = `${newFileName}${extname(
+              //   dto.thumbnail.fileName
+              // )}`;
+              // file.originalFileName = dto.thumbnail.fileName;
+
+              // const bucketFile = bucket.file(
+              //   `offer/profile/${newFileName}${extname(file.fileName)}`
+              // );
+              // const img = Buffer.from(dto.thumbnail.data, "base64");
+              // await bucketFile.save(img).then(async () => {
+              //   const url = await bucketFile.getSignedUrl({
+              //     action: "read",
+              //     expires: "03-09-2500",
+              //   });
+              //   file.url = url[0];
+              //   offer.thumbnailFile = await entityManager.save(Files, file);
+              // });
+            } else {
+              const newFileName: string = uuid();
+
+              const file = new Files();
+              file.fileName = `${newFileName}${extname(
+                dto.thumbnail.fileName
+              )}`;
+              file.originalFileName = dto.thumbnail.fileName;
+              const app = initializeApp(firebaseConfig);
+              const storeApp = getStorage(app);
+              const img = Buffer.from(dto.thumbnail.data, "base64");
+                
+              try{
+                const imageRef = ref(storeApp, `offer/profile/${newFileName}${extname(file.fileName)}`);
+                await uploadBytes(imageRef, img).then(async()=>{
+                  console.log('hererer')
+                  file.url = await getDownloadURL(imageRef);
+                  offer.thumbnailFile = await entityManager.save(Files, file);
+                  console.log(file.url)
+                }).catch((error)=>{
+                  console.log(error.message);
+                  throw error;
+                });
+              }catch(e){
+                console.log(e)
+              }
+              // const file = new Files();
+              // file.fileName = `${newFileName}${extname(
+              //   dto.thumbnail.fileName
+              // )}`;
+              // file.originalFileName = dto.thumbnail.originalFileName;
+
+              // const bucketFile = bucket.file(
+              //   `offer/profile/${newFileName}${extname(file.fileName)}`
+              // );
+              // const img = Buffer.from(dto.thumbnail.data, "base64");
+              // await bucketFile.save(img).then(async () => {
+              //   const url = await bucketFile.getSignedUrl({
+              //     action: "read",
+              //     expires: "03-09-2500",
+              //   });
+              //   file.url = url[0];
+              //   offer.thumbnailFile = await entityManager.save(Files, file);
+              // });
             }
           }
           return await entityManager.save(offer);
