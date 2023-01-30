@@ -16,7 +16,7 @@ import { Users } from "src/shared/entities/Users";
 import { Repository } from "typeorm";
 import { v4 as uuid } from "uuid";
 import { FirebaseApp, initializeApp } from 'firebase/app';
-import { FirebaseStorage, getDownloadURL, getStorage, ref, uploadBytes } from 'firebase/storage';
+import { deleteObject, FirebaseStorage, getDownloadURL, getStorage, ref, uploadBytes } from 'firebase/storage';
 import { firebaseConfig } from "../core/provider/firebase/firestore-config";
 
 @Injectable()
@@ -261,7 +261,7 @@ export class StoreService {
             
           const imageRef = ref(storeApp, `store/profile/${newFileName}${extname(file.fileName)}`);
 
-          uploadBytes(imageRef, img).then(async()=>{
+          await uploadBytes(imageRef, img).then(async()=>{
             file.url = await getDownloadURL(imageRef);
             store.thumbnailFile = await entityManager.save(Files, file);
           }).catch((error)=>{
@@ -341,49 +341,102 @@ export class StoreService {
         store.description = dto.description;
 
         if (dto.thumbnail) {
-          const newFileName: string = uuid();
-          const bucket = this.firebaseProvoder.app.storage().bucket();
           if (store.thumbnailFile) {
-            try {
-              const deleteFile = bucket.file(
-                `store/profile/${store.thumbnailFile.fileName}`
-              );
-              deleteFile.delete();
-            } catch (ex) {
-              console.log(ex);
-            }
-            const file = store.thumbnailFile;
-            file.fileName = `${newFileName}${extname(dto.thumbnail.fileName)}`;
-            file.originalFileName = dto.thumbnail.fileName;
-            const bucketFile = bucket.file(
-              `store/profile/${newFileName}${extname(dto.thumbnail.fileName)}`
-            );
-            const img = Buffer.from(dto.thumbnail.data, "base64");
-            await bucketFile.save(img).then(async () => {
-              const url = await bucketFile.getSignedUrl({
-                action: "read",
-                expires: "03-09-2500",
-              });
-              file.url = url[0];
-              store.thumbnailFile = await entityManager.save(Files, file);
-            });
-          } else {
+            const newFileName: string = uuid();
+            const bucket = this.firebaseProvoder.app.storage().bucket();
+  
             const file = new Files();
+            file.fileName = `${newFileName}${extname(
+              dto.thumbnail.fileName
+            )}`;
+            file.originalFileName = dto.thumbnail.fileName;
+            const app = initializeApp(firebaseConfig);
+            const storeApp = getStorage(app);
+            const img = Buffer.from(dto.thumbnail.data, "base64");
+              
+            const imageRef = ref(storeApp, `store/profile/${newFileName}${extname(file.fileName)}`);
+  
+            await uploadBytes(imageRef, img).then(async()=>{
+              file.url = await getDownloadURL(imageRef);
+              store.thumbnailFile = await entityManager.save(Files, file);
+            }).catch((error)=>{
+              console.log(error.message);
+              throw error;
+            });
+
+
+            // const newFileName: string = uuid();
+            // const app = initializeApp(firebaseConfig);
+            // const storeApp = getStorage(app);
+            // const file = new Files();
+            // file.fileName = `${newFileName}${extname(
+            //   dto.thumbnail.fileName
+            // )}`;
+            // file.originalFileName = dto.thumbnail.fileName;
+            
+            // const img = Buffer.from(dto.thumbnail.data, "base64");
+            // const imageRef = ref(storeApp, `store/profile/${newFileName}${extname(file.fileName)}`);
+            // await uploadBytes(imageRef, img).then(async()=>{
+            //   console.log("shes here")
+            //   file.url = await getDownloadURL(imageRef);
+            //   store.thumbnailFile = await entityManager.save(Files, file);
+            // }).catch((error)=>{
+            //   console.log(error.message);
+            //   throw error;
+            // });
+            // try {
+            //   const deleteFile = bucket.file(
+            //     `store/profile/${store.thumbnailFile.fileName}`
+            //   );
+            //   deleteFile.delete();
+            // } catch (ex) {
+            //   console.log(ex);
+            // }
+            // const file = store.thumbnailFile;
+            // file.fileName = `${newFileName}${extname(dto.thumbnail.fileName)}`;
+            // file.originalFileName = dto.thumbnail.fileName;
+            // const bucketFile = bucket.file(
+            //   `store/profile/${newFileName}${extname(dto.thumbnail.fileName)}`
+            // );
+            // const img = Buffer.from(dto.thumbnail.data, "base64");
+            // await bucketFile.save(img).then(async () => {
+            //   const url = await bucketFile.getSignedUrl({
+            //     action: "read",
+            //     expires: "03-09-2500",
+            //   });
+            //   file.url = url[0];
+            //   store.thumbnailFile = await entityManager.save(Files, file);
+            // });
+          } else {
+            
+            const file = new Files();
+            const newFileName: string = uuid();
             file.fileName = `${newFileName}${extname(dto.thumbnail.fileName)}`;
             file.originalFileName = dto.thumbnail.fileName;
+            const app = initializeApp(firebaseConfig);
+            const storeApp = getStorage(app);
+              
+            const imageRef = ref(storeApp, `store/profile/${newFileName}${extname(file.fileName)}`);
 
-            const bucketFile = bucket.file(
-              `store/profile/${newFileName}${extname(dto.thumbnail.fileName)}`
-            );
+            // const bucketFile = bucket.file(
+            //   `store/profile/${newFileName}${extname(dto.thumbnail.fileName)}`
+            // );
             const img = Buffer.from(dto.thumbnail.data, "base64");
-            await bucketFile.save(img).then(async () => {
-              const url = await bucketFile.getSignedUrl({
-                action: "read",
-                expires: "03-09-2500",
-              });
-              file.url = url[0];
+            await uploadBytes(imageRef, img).then(async()=>{
+              file.url = await getDownloadURL(imageRef);
               store.thumbnailFile = await entityManager.save(Files, file);
+            }).catch((error)=>{
+              console.log(error.message);
+              throw error;
             });
+            // await bucketFile.save(img).then(async () => {
+            //   const url = await bucketFile.getSignedUrl({
+            //     action: "read",
+            //     expires: "03-09-2500",
+            //   });
+            //   file.url = url[0];
+            //   store.thumbnailFile = await entityManager.save(Files, file);
+            // });
           }
         }
 
