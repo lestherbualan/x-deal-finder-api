@@ -52,6 +52,8 @@ GO
 CREATE TABLE [dbo].[Offers](
 	[OfferId] [bigint] IDENTITY(1,1) NOT NULL,
 	[Name] [nvarchar](250) NOT NULL,
+	[DealOffer] [nvarchar](250) NOT NULL,
+	[Location] [nvarchar](250) NOT NULL,
 	[Description] [nvarchar](255) NOT NULL,
 	[Due] [date] NOT NULL,
 	[StoreId] [bigint] NOT NULL,
@@ -190,6 +192,10 @@ GO
 INSERT [dbo].[OfferTypes] ([OfferTypeId], [Name]) VALUES (11, N'Mobiles & Gadgets')
 GO
 INSERT [dbo].[OfferTypes] ([OfferTypeId], [Name]) VALUES (12, N'Mobiles Accessories')
+GO
+INSERT [dbo].[OfferTypes] ([OfferTypeId], [Name]) VALUES (12, N'Vehicles')
+GO
+INSERT [dbo].[OfferTypes] ([OfferTypeId], [Name]) VALUES (12, N'Others')
 GO
 SET IDENTITY_INSERT [dbo].[Users] ON 
 GO
