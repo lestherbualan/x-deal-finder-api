@@ -183,7 +183,7 @@ export class OffersService {
             "oes.entityStatusId = :entityStatusId AND " +
             "ses.entityStatusId = :entityStatusId AND " +
             "LOWER(ot.name) IN(:...offerTypes) AND " +
-            "(o.name LIKE :key OR o.description LIKE :key OR ot.name LIKE :key)"
+            "(o.name LIKE :key OR o.description LIKE :key OR ot.name LIKE :key OR o.dealoffer LIKE :key OR o.location LIKE :key)"
         );
       } else {
         q = q.andWhere(
@@ -192,7 +192,7 @@ export class OffersService {
             "s.isApproved = :isApproved AND " +
             "oes.entityStatusId = :entityStatusId AND " +
             "ses.entityStatusId = :entityStatusId AND " +
-            "(o.name LIKE :key OR o.description LIKE :key OR ot.name LIKE :key)"
+            "(o.name LIKE :key OR o.description LIKE :key OR ot.name LIKE :key OR o.dealoffer LIKE :key OR o.location LIKE :key)"
         );
       }
       q.setParameters(options).orderBy("o.due", "ASC");
