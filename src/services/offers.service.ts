@@ -6,15 +6,13 @@ import * as moment from "moment";
 import { extname } from "path";
 import { CreateOfferDto } from "src/core/dto/offer/offer.create.dto";
 import { OfferDto } from "src/core/dto/offer/offer.update.dtos";
-import { StoreDto } from "src/core/dto/store/store.update.dtos";
 import { FirebaseProvider } from "src/core/provider/firebase/firebase-provider";
 import { firebaseConfig } from "src/core/provider/firebase/firestore-config";
 import { Files } from "src/shared/entities/Files";
 import { Offers } from "src/shared/entities/Offers";
 import { OfferTypes } from "src/shared/entities/OfferTypes";
-import { StoreDocuments } from "src/shared/entities/StoreDocuments";
 import { Stores } from "src/shared/entities/Stores";
-import { In, Repository } from "typeorm";
+import { Repository } from "typeorm";
 import { v4 as uuid } from "uuid";
 
 @Injectable()
@@ -162,7 +160,7 @@ export class OffersService {
         return x.toLowerCase();
       });
       options.entityStatusId = 1;
-      options.key = `%${params.key ? params.key : ""}%`;
+      options.key = `%${params.key ? params.key : ""}%`
       options.isApproved = true;
       options.userId = params.userId;
       options.entityStatusId = 1;
@@ -217,7 +215,6 @@ export class OffersService {
       });
       return store;
     } catch (e) {
-      console.log(e);
       throw e;
     }
   }
@@ -268,12 +265,9 @@ export class OffersService {
             try{
               const imageRef = ref(storeApp, `offer/profile/${newFileName}${extname(file.fileName)}`);
               await uploadBytes(imageRef, img).then(async()=>{
-                console.log('hererer')
                 file.url = await getDownloadURL(imageRef);
                 offer.thumbnailFile = await entityManager.save(Files, file);
-                console.log(file.url)
               }).catch((error)=>{
-                console.log(error.message);
                 throw error;
               });
             }catch(e){
@@ -358,12 +352,9 @@ export class OffersService {
               try{
                 const imageRef = ref(storeApp, `offer/profile/${newFileName}${extname(file.fileName)}`);
                 await uploadBytes(imageRef, img).then(async()=>{
-                  console.log('hererer')
                   file.url = await getDownloadURL(imageRef);
                   offer.thumbnailFile = await entityManager.save(Files, file);
-                  console.log(file.url)
                 }).catch((error)=>{
-                  console.log(error.message);
                   throw error;
                 });
               }catch(e){
@@ -410,12 +401,9 @@ export class OffersService {
               try{
                 const imageRef = ref(storeApp, `offer/profile/${newFileName}${extname(file.fileName)}`);
                 await uploadBytes(imageRef, img).then(async()=>{
-                  console.log('hererer')
                   file.url = await getDownloadURL(imageRef);
                   offer.thumbnailFile = await entityManager.save(Files, file);
-                  console.log(file.url)
                 }).catch((error)=>{
-                  console.log(error.message);
                   throw error;
                 });
               }catch(e){
