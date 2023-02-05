@@ -5,17 +5,21 @@ import {
   JoinColumn,
   ManyToOne,
   OneToOne,
+  PrimaryGeneratedColumn,
 } from "typeorm";
 import { Users } from "./Users";
 import { Stores } from "./Stores";
 
-@Index("PK_StoreReviews", ["userId"], { unique: true })
+// @Index("PK_StoreReviews", ["userId"], { unique: true })
 @Entity("StoreReviews", { schema: "dbo" })
 export class StoreReviews {
-  @Column("bigint", { primary: true, name: "UserId" })
+  @PrimaryGeneratedColumn({ type: "bigint", name: "StoreReviewId" })
+  storeReviewId: string;
+
+  @Column("bigint", { name: "UserId" })
   userId: string;
 
-  @Column("bigint", { name: "Rate", default: () => "(0)" })
+  @Column("float", { name: "Rate", default: () => "(0)" })
   rate: string;
 
   @OneToOne(() => Users, (users) => users.storeReviews)

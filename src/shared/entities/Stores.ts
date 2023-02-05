@@ -26,7 +26,7 @@ export class Stores {
   @Column("nvarchar", { name: "Description" })
   description: string;
 
-  @Column("bigint", { name: "Reviews", default: () => "(0)" })
+  @Column("float", { name: "Reviews", default: () => "(0)" })
   reviews: string;
 
   @Column("bit", { name: "IsApproved", default: () => "(0)" })

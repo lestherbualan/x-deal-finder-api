@@ -28,7 +28,8 @@ export class TypeOrmConfigService implements TypeOrmOptionsFactory {
       port: 1443,
       username: "admin",
       password: "admin123",
-      database: "xdealfinderdb",
+      //database: "xdealfinderdb",
+      database: "test5",
       entities: [
         Users,
         Stores,

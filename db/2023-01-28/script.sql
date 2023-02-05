@@ -1,4 +1,3 @@
-USE [xdealfinderdb]
 GO
 /****** Object:  Table [dbo].[EntityStatus]    Script Date: 1/28/2023 12:31:56 AM ******/
 SET ANSI_NULLS ON
@@ -104,7 +103,7 @@ GO
 CREATE TABLE [dbo].[StoreReviews](
 	[UserId] [bigint] NOT NULL,
 	[StoreId] [bigint] NOT NULL,
-	[Rate] [bigint] NOT NULL,
+	[Rate] [float] NOT NULL,
  CONSTRAINT [PK_StoreReviews] PRIMARY KEY CLUSTERED 
 (
 	[UserId] ASC
@@ -122,7 +121,7 @@ CREATE TABLE [dbo].[Stores](
 	[ThumbnailFileId] [bigint] NULL,
 	[Name] [nvarchar](50) NOT NULL,
 	[Description] [nvarchar](max) NOT NULL,
-	[Reviews] [bigint] NOT NULL,
+	[Reviews] [float] NOT NULL,
 	[IsApproved] [bit] NOT NULL,
 	[EntityStatusId] [bigint] NOT NULL,
  CONSTRAINT [PK_d23f306e16cd758dcaaf08d8e53] PRIMARY KEY CLUSTERED 
@@ -193,9 +192,9 @@ INSERT [dbo].[OfferTypes] ([OfferTypeId], [Name]) VALUES (11, N'Mobiles & Gadget
 GO
 INSERT [dbo].[OfferTypes] ([OfferTypeId], [Name]) VALUES (12, N'Mobiles Accessories')
 GO
-INSERT [dbo].[OfferTypes] ([OfferTypeId], [Name]) VALUES (12, N'Vehicles')
+INSERT [dbo].[OfferTypes] ([OfferTypeId], [Name]) VALUES (13, N'Vehicles')
 GO
-INSERT [dbo].[OfferTypes] ([OfferTypeId], [Name]) VALUES (12, N'Others')
+INSERT [dbo].[OfferTypes] ([OfferTypeId], [Name]) VALUES (14, N'Others')
 GO
 SET IDENTITY_INSERT [dbo].[Users] ON 
 GO
@@ -298,8 +297,9 @@ GO
 ALTER TABLE [dbo].[Offers]  WITH CHECK ADD  CONSTRAINT [FK_Offers_Files] FOREIGN KEY([ThumbnailFileId])
 REFERENCES [dbo].[Files] ([FileId])
 GO
-ALTER TABLE [dbo].[Offers]  WITH CHECK ADD  CONSTRAINT [FK_Offers_Files] FOREIGN KEY([ThumbnailFileId])
-REFERENCES [dbo].[Files] ([FileId])
+ALTER TABLE [dbo].[StoreReviews] DROP CONSTRAINT PK_StoreReviews
+GO
+ALTER TABLE [dbo].[StoreReviews] ADD StoreReviewId BIGINT IDENTITY(1,1) PRIMARY KEY NOT NULL
 GO
 /****** Object:  StoredProcedure [dbo].[usp_Reset]    Script Date: 1/28/2023 12:31:56 AM ******/
 SET ANSI_NULLS ON
