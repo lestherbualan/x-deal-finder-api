@@ -29,7 +29,7 @@ export class TypeOrmConfigService implements TypeOrmOptionsFactory {
       username: "admin",
       password: "admin123",
       //database: "xdealfinderdb",
-      database: "test5",
+      database: "test6",
       entities: [
         Users,
         Stores,

@@ -273,29 +273,6 @@ export class OffersService {
             }catch(e){
               console.log(e)
             }
-
-            
-            // const newFileName: string = uuid();
-            // const bucket = this.firebaseProvoder.app.storage().bucket();
-
-            // const file = new Files();
-            // file.fileName = `${newFileName}${extname(
-            //   createOfferDto.thumbnail.fileName
-            // )}`;
-            // file.originalFileName = createOfferDto.thumbnail.fileName;
-
-            // const bucketFile = bucket.file(
-            //   `offer/profile/${newFileName}${extname(file.fileName)}`
-            // );
-            // const img = Buffer.from(createOfferDto.thumbnail.data, "base64");
-            // await bucketFile.save(img).then(async () => {
-            //   const url = await bucketFile.getSignedUrl({
-            //     action: "read",
-            //     expires: "03-09-2500",
-            //   });
-            //   file.url = url[0];
-            //   offer.thumbnailFile = await entityManager.save(Files, file);
-            // });
           }
           return await entityManager.save(Offers,offer);
         }
@@ -360,32 +337,6 @@ export class OffersService {
               }catch(e){
                 console.log(e)
               }
-              // try {
-              //   const deleteFile = bucket.file(
-              //     `offer/profile/${offer.thumbnailFile.fileName}`
-              //   );
-              //   deleteFile.delete();
-              // } catch (ex) {
-              //   console.log(ex);
-              // }
-              // const file = offer.thumbnailFile;
-              // file.fileName = `${newFileName}${extname(
-              //   dto.thumbnail.fileName
-              // )}`;
-              // file.originalFileName = dto.thumbnail.fileName;
-
-              // const bucketFile = bucket.file(
-              //   `offer/profile/${newFileName}${extname(file.fileName)}`
-              // );
-              // const img = Buffer.from(dto.thumbnail.data, "base64");
-              // await bucketFile.save(img).then(async () => {
-              //   const url = await bucketFile.getSignedUrl({
-              //     action: "read",
-              //     expires: "03-09-2500",
-              //   });
-              //   file.url = url[0];
-              //   offer.thumbnailFile = await entityManager.save(Files, file);
-              // });
             } else {
               const newFileName: string = uuid();
 
@@ -409,24 +360,6 @@ export class OffersService {
               }catch(e){
                 console.log(e)
               }
-              // const file = new Files();
-              // file.fileName = `${newFileName}${extname(
-              //   dto.thumbnail.fileName
-              // )}`;
-              // file.originalFileName = dto.thumbnail.originalFileName;
-
-              // const bucketFile = bucket.file(
-              //   `offer/profile/${newFileName}${extname(file.fileName)}`
-              // );
-              // const img = Buffer.from(dto.thumbnail.data, "base64");
-              // await bucketFile.save(img).then(async () => {
-              //   const url = await bucketFile.getSignedUrl({
-              //     action: "read",
-              //     expires: "03-09-2500",
-              //   });
-              //   file.url = url[0];
-              //   offer.thumbnailFile = await entityManager.save(Files, file);
-              // });
             }
           }
           return await entityManager.save(offer);

@@ -90,11 +90,6 @@ export class StoreController {
       res.data = await this.storeService.getStoreAdvanceSearch({
         userId,
         key,
-        dueDate: new Date(
-          moment(`${moment(dueDate).format("YYYY-MM-DD")} 00:00`).format(
-            "YYYY-MM-DD HH:mm"
-          )
-        ),
         offerTypes: offerTypes ? offerTypes.trim().split(",") : [],
       });
       res.success = true;

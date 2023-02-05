@@ -232,36 +232,8 @@ export class UsersService {
               console.log(error.message);
               throw error;
             });
-          // try {
-          //   const deleteFile = bucket.file(
-          //     `profile/${user.profilePictureFile.fileName}`
-          //   );
-          //   deleteFile.delete();
-          // } catch (ex) {
-          //   console.log(ex);
-          // }
-          // const file = user.profilePictureFile;
-          // file.fileName = `${newFileName}${extname(
-          //   userDto.profilePictureFile.fileName
-          // )}`;
-          // file.originalFileName = userDto.profilePictureFile.fileName;
-
-          // const bucketFile = bucket.file(
-          //   `profile/${newFileName}${extname(file.fileName)}`
-          // );
-          // const img = Buffer.from(userDto.profilePictureFile.data, "base64");
-          // await bucketFile.save(img).then(async () => {
-          //   const url = await bucketFile.getSignedUrl({
-          //     action: "read",
-          //     expires: "03-09-2500",
-          //   });
-          //   file.url = url[0];
-          //   user.profilePictureFile = await entityManager.save(Files, file);
-          // });
         } else {
           const newFileName: string = uuid();
-          //const bucket = this.firebaseProvoder.app.storage().bucket();
-
           const file = new Files();
           file.fileName = `${newFileName}${extname(
             userDto.profilePictureFile.fileName
@@ -280,24 +252,6 @@ export class UsersService {
             console.log(error.message);
             throw error;
           });
-          // const file = new Files();
-          // file.fileName = `${newFileName}${extname(
-          //   userDto.profilePictureFile.fileName
-          // )}`;
-          // file.originalFileName = userDto.profilePictureFile.originalFileName;
-
-          // const bucketFile = bucket.file(
-          //   `profile/${newFileName}${extname(file.fileName)}`
-          // );
-          // const img = Buffer.from(userDto.profilePictureFile.data, "base64");
-          // await bucketFile.save(img).then(async () => {
-          //   const url = await bucketFile.getSignedUrl({
-          //     action: "read",
-          //     expires: "03-09-2500",
-          //   });
-          //   file.url = url[0];
-          //   user.profilePictureFile = await entityManager.save(Files, file);
-          // });
         }
       }
 
