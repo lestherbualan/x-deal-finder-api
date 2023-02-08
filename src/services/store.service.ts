@@ -128,8 +128,9 @@ export class StoreService {
           "u.userId <> :userId AND " +
             "s.isApproved = :isApproved AND " +
             "es.entityStatusId = :entityStatusId AND " +
-            "LOWER(ot.name) IN(:...offerTypes) AND " +
-            "(s.name LIKE :key OR s.description LIKE :key)"
+            "LOWER(ot.name) LIKE :offerTypes AND " +
+            "(s.name LIKE :key OR s.description LIKE :key)",{
+            offerTypes: ['travel toys','games & collectibles']}
         );
       } else {
         q = q.where(

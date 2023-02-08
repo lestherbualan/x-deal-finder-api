@@ -160,7 +160,9 @@ export class OffersService {
         return x.toLowerCase();
       });
       options.entityStatusId = 1;
+      console.log(params.offerTypes)
       options.key = `%${params.key ? params.key : ""}%`
+      console.log(options.key)
       options.isApproved = true;
       options.userId = params.userId;
       options.entityStatusId = 1;
@@ -180,7 +182,7 @@ export class OffersService {
             "s.isApproved = :isApproved AND " +
             "oes.entityStatusId = :entityStatusId AND " +
             "ses.entityStatusId = :entityStatusId AND " +
-            "LOWER(ot.name) IN(:...offerTypes) AND " +
+            "LOWER(ot.name) LIKE :offerTypes AND " +
             "(o.name LIKE :key OR o.description LIKE :key OR ot.name LIKE :key OR o.dealoffer LIKE :key OR o.location LIKE :key)"
         );
       } else {
@@ -190,7 +192,9 @@ export class OffersService {
             "s.isApproved = :isApproved AND " +
             "oes.entityStatusId = :entityStatusId AND " +
             "ses.entityStatusId = :entityStatusId AND " +
-            "(o.name LIKE :key OR o.description LIKE :key OR ot.name LIKE :key OR o.dealoffer LIKE :key OR o.location LIKE :key)"
+            "(o.name LIKE :key OR o.description LIKE :key OR ot.name LIKE :key OR o.dealoffer LIKE :key OR o.location LIKE :key)",{
+              offerTypes: ['travel toys','games & collectibles']
+            }
         );
       }
       q.setParameters(options).orderBy("o.due", "ASC");
