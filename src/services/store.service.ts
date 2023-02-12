@@ -242,6 +242,7 @@ export class StoreService {
         store.name = createStoreDto.name;
         store.description = createStoreDto.description;
         store.isApproved = false;
+        store.socialLink = createStoreDto.socialLink;
         store.user = await entityManager.findOneBy(Users, {
           userId: createStoreDto.userId,
         });
@@ -338,6 +339,7 @@ export class StoreService {
         }
         store.name = dto.name;
         store.description = dto.description;
+        store.socialLink = dto.socialLink;
 
         if (dto.thumbnail) {
           if (store.thumbnailFile) {

@@ -54,4 +54,7 @@ export class Stores {
     { name: "EntityStatusId", referencedColumnName: "entityStatusId" },
   ])
   entityStatus: EntityStatus;
+
+  @Column("nvarchar", { name: "SocialLink" })
+  socialLink: string;
 }

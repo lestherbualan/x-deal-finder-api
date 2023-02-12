@@ -21,6 +21,10 @@ export class CreateStoreDto {
   @ApiProperty()
   @IsOptional()
   thumbnail: any;
+
+  @ApiProperty()
+  @IsNotEmpty()
+  socialLink: string;
 }
 
 
